@@ -1,27 +1,33 @@
 import { useState, useEffect } from 'react';
 
+
+
 const TodoForm = ({ initialData = {}, onSave }) => {
   const [formData, setFormData] = useState({
+    id: initialData.id || '' ,
     title: initialData.title || '',
     description: initialData.description || ''
   });
 
   useEffect(() => {
     setFormData({
+      id: initialData.id ,
       title: initialData.title || '',
       description: initialData.description || ''
     });
   }, [initialData]);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     onSave(formData);
-    setFormData({ title: '', description: '' }); // Reset form after saving
+    setFormData({ id:null,  title: '', description: '' }); 
   };
 
   return (
@@ -43,7 +49,7 @@ const TodoForm = ({ initialData = {}, onSave }) => {
         placeholder="Enter todo description"
       />
       <button type="submit" className="mt-2 py-2 px-5 bg-blue-500 text-white rounded-xl">
-        Save
+        {formData.id ? 'Update' : 'Add'}
       </button>
     </form>
   );

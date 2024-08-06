@@ -14,11 +14,12 @@ export const fetchTodo = createAsyncThunk('todos/fetchTodo', async (id) => {
 
 export const createTodo = createAsyncThunk('todos/createTodo', async (newTodo) => {
   const response = await axiosInstance.post('/todos', newTodo);
+  console.log('created todo:',response.data);
   return response.data;
 });
 
 export const updateTodo = createAsyncThunk('todos/updateTodo', async (updatedTodo) => {
-  const response = await axiosInstance.put(`/todos/${updatedTodo.id}`, updatedTodo);
+  const response = await axiosInstance.put(`/todos/${id}`, updatedTodo);
   return response.data;
 });
 

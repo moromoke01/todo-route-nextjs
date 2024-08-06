@@ -6,6 +6,7 @@ let localTodos = [...todos];
 
 // Handle GET request for a single todo item
 export async function GET(req) {
+  
   try {
     const url = new URL(req.url);
     const todoId = url.pathname.split('/').pop();
@@ -14,7 +15,7 @@ export async function GET(req) {
     if (!todo) {
       return NextResponse.json({ error: 'Todo not found' }, { status: 404 });
     }
-    return NextResponse.json({ todo }, { status: 200 });
+    return NextResponse.json({ localTodos }, { status: 200 });
   } catch (error) {
     console.error("Error in GET:", error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -38,7 +39,7 @@ export async function POST(req) {
 }
 
 // Handle PUT request to update an existing todo item
-export async function PUT(req) {
+export async function PATCH(req) {
   try {
     const data = await req.json();
     const url = new URL(req.url);

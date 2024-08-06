@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,13 +24,13 @@ export default function TodoDetail() {
     }
   }, [todo]);
 
-  if (status === "loading") {
-    return <p className='text-center'>Loading...</p>;
-  }
+  // if (status === "loading") {
+  //   return <p className='text-center'>Loading...</p>;
+  // }
 
-  if (status === "failed") {
-    return <p className='text-center'>Error: {error}</p>;
-  }
+  // if (status === "failed") {
+  //   return <p className='text-center'>Error: {error}</p>;
+  // }
 
   return (
     <div className="w-full mx-auto m-4 p-4 mt-10 bg-purple-800 sm:w-3/4 md:w-2/3 lg:w-3/6">
@@ -41,4 +42,4 @@ export default function TodoDetail() {
       </div>
     </div>
   );
-};
+}

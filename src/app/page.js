@@ -10,6 +10,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const { todos, status, error } = useSelector(getTodoData);
 
+
   const [currentTodo, setCurrentTodo] = useState(null);
 
   useEffect(() => {
@@ -17,18 +18,33 @@ export default function Home() {
   }, [dispatch]);
 
   const handleSave = (todo) => {
-    console.log("Saving Todo:", todo);
     if (todo.id) {
-      dispatch(updateTodo(todo));
+      console.log("Saving Todo:", todo);
+      dispatch(updateTodo({
+        id: todo.id,
+        updatedTodo: {
+          title: todo.title,
+          description: todo.description
+        }
+      }));
     } else {
-      dispatch(createTodo(todo));
+      dispatch(createTodo({
+
+        title: todo.title,
+        description: todo.description
+      }));
+
+      console.log("Saving Todo:", todo);
     }
-    setCurrentTodo(null);
+
+    dispatch(fetchTodos());
   };
 
   const handleDelete = (id) => {
     console.log("Deleting Todo with ID:", id);
-    dispatch(deleteTodo(id));
+    dispatch(deleteTodo(id)).catch((err) => {
+      console.error("Error deleting todo:", err);
+    });
   };
 
   if (status === "loading") {

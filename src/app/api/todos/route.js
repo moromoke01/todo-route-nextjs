@@ -8,32 +8,27 @@ export async function GET(req) {
   return NextResponse.json(localTodos, { status: 200 });
 }
 
-// Handle GET request for a single todo item
-export async function GET_BY_ID(req) {
-  const url = new URL(req.url);
-  const todoId = url.pathname.split('/').pop();
-  const todo = localTodos.find(todo => todo.id === parseInt(todoId, 10));
 
-  if (!todo) {
-    return NextResponse.json({ error: 'Todo not found' }, { status: 404 });
-  }
-
-  return NextResponse.json(todo, { status: 200 });
-}
 
 // Handle POST request to create a new todo item
 export async function POST(req) {
-  const data = await req.json();
-  const newTodo = {
-    id: Date.now(),
-    ...data,
-  };
-  localTodos.push(newTodo);
-  return NextResponse.json(newTodo, { status: 201 });
+  try {
+    const data = await req.json();
+    const newTodo = {
+      id: Date.now(), 
+      ...data,
+    };
+    localTodos.push(newTodo);
+    return NextResponse.json(newTodo, { status: 201 });
+  } catch (error) {
+    console.error("Error in POST:", error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }
 
+
 // Handle PUT request to update an existing todo item
-export async function PUT(req) {
+export async function PATCH(req) {
   const data = await req.json();
   const url = new URL(req.url);
   const todoId = url.pathname.split('/').pop();
