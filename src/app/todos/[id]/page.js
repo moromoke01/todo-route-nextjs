@@ -13,24 +13,24 @@ export default function TodoDetail() {
 
   useEffect(() => {
     if (todoId) {
-      console.log("Fetching todo with ID:", todoId); // Debug log
+      console.log("Fetching todo with ID:", todoId); 
       dispatch(fetchTodo(todoId));
     }
   }, [todoId, dispatch]);
 
   useEffect(() => {
     if (todo) {
-      console.log("Fetched Todo:", todo); // Debug log
+      console.log("Fetched Todo:", todo); 
     }
   }, [todo]);
 
-  // if (status === "loading") {
-  //   return <p className='text-center'>Loading...</p>;
-  // }
+  if (status === "loading") {
+    return <p className='text-center'>Loading...</p>;
+  }
 
-  // if (status === "failed") {
-  //   return <p className='text-center'>Error: {error}</p>;
-  // }
+  if (status === "failed") {
+    return <p className='text-center'>Error: {error}</p>;
+  }
 
   return (
     <div className="w-full mx-auto m-4 p-4 mt-10 bg-purple-800 sm:w-3/4 md:w-2/3 lg:w-3/6">

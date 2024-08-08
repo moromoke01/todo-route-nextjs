@@ -14,19 +14,52 @@ export const fetchTodo = createAsyncThunk('todos/fetchTodo', async (id) => {
 
 export const createTodo = createAsyncThunk('todos/createTodo', async (newTodo) => {
   const response = await axiosInstance.post('/todos', newTodo);
-  console.log('created todo:',response.data);
   return response.data;
 });
 
-export const updateTodo = createAsyncThunk('todos/updateTodo', async (updatedTodo) => {
-  const response = await axiosInstance.put(`/todos/${id}`, updatedTodo);
-  return response.data;
+
+
+// export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, updatedTodo }) => {
+//   const response = await axiosInstance.put(/todos/${id}, updatedTodo);
+//   return response.data;
+// });
+
+
+export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, updatedTodo }) => {
+  try {
+    const response = await fetch(`/todos/${id}`, {
+      method: 'PUT'
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update the todo');
+    }
+
+    return response.data; 
+  } catch (error) {
+    console.error('Error in updateTodo:', error);
+    throw error;
+  }
 });
+
 
 export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id) => {
-  await axiosInstance.delete(`/todos/${id}`);
-  return id;
+  const response = await fetch(`/todos/${id}`, {
+    method: 'DELETE',
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to delete the todo');
+  }
+  
+  return id; // Return the id for Redux to remove the todo from state
 });
+
+
+// export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id) => {
+//   await axiosInstance.delete(/todos/${id});
+//   return id;
+// });
 
 const todoSlice = createSlice({
   name: 'todo',
@@ -72,16 +105,41 @@ const todoSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
+      .addCase(updateTodo.pending, (state) => {
+        state.status = 'loading';
+      })
+      // .addCase(updateTodo.fulfilled, (state, action) => {
+      //   state.status = 'succeeded';
+      //   const index = state.todos.findIndex(todo => todo.id === action.payload.id);
+      //   if (index !== -1) {
+      //     state.todos[index] = action.payload;
+      //   }
+      // })
+
       .addCase(updateTodo.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        const index = state.todos.findIndex(todo => todo.id === action.payload.id);
+        const updatedTodo = action.payload;
+        const index = state.todos.findIndex(todo => todo.id === updatedTodo.id);
         if (index !== -1) {
-          state.todos[index] = action.payload;
+          state.todos[index] = updatedTodo;
         }
       })
+      .addCase(updateTodo.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+
+      // .addCase(deleteTodo.fulfilled, (state, action) => {
+      //   state.status = 'succeeded';
+      //   state.todos = state.todos.filter(todo => todo.id !== action.payload);
+      // });
+
       .addCase(deleteTodo.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.todos = state.todos.filter(todo => todo.id !== action.payload);
+        const id = action.payload;
+        const index = state.todos.findIndex(todo => todo.id === id);
+        if (index !== -1) {
+          state.todos.splice(index, 1); // Remove todo from state
+        }
       });
   },
 });
