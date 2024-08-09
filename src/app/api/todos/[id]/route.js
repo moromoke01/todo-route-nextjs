@@ -22,6 +22,25 @@ let localTodos = [...todos];
 //   }
 // }
 
+
+
+export async function GET(req) {
+  try {
+    const url = new URL(req.url);
+    const todoId = url.pathname.split('/').pop();
+    const todo = localTodos.find(u => u.id === parseInt(todoId, 10));
+
+    if (!todo) {
+      return NextResponse.json({ error: 'Todo not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(todo, { status: 200 }); // Return the specific todo item
+  } catch (error) {
+    console.error("Error in GET:", error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
 // Handle POST request to create a new todo item
 export async function POST(req) {
   try {

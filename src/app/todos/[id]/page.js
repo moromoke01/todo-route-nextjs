@@ -18,11 +18,11 @@ export default function TodoDetail() {
     }
   }, [todoId, dispatch]);
 
-  useEffect(() => {
-    if (todo) {
-      console.log("Fetched Todo:", todo); 
-    }
-  }, [todo]);
+  // useEffect(() => {
+  //   if (todo) {
+  //     console.log("Fetched Todo:", todo); 
+  //   }
+  // }, [todo]);
 
   if (status === "loading") {
     return <p className='text-center'>Loading...</p>;
