@@ -42,24 +42,54 @@ export async function POST(req) {
 }
 
 // Handle PATCH request to update an existing todo item
+// export async function PUT(req) {
+//   try {
+//     const data = await req.json();
+//     const url = new URL(req.url);
+//     const todoId = url.pathname.split('/').pop();
+//     const index = localTodos.findIndex(u => u.id === parseInt(todoId, 10));
+
+//     if (index === -1) {
+//       return NextResponse.json({ error: 'Todo not found' }, { status: 404 });
+//     }
+
+//     localTodos[index] = { ...localTodos[index], ...data };
+//     return NextResponse.json({ todo: localTodos[index] }, { status: 200 });
+//   } catch (error) {
+//     console.error("Error in PATCH:", error);
+//     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+//   }
+// }
+
 export async function PUT(req) {
   try {
+    // Parse the incoming JSON body
     const data = await req.json();
+
+    // Extract the todo ID from the request URL
     const url = new URL(req.url);
     const todoId = url.pathname.split('/').pop();
-    const index = localTodos.findIndex(u => u.id === parseInt(todoId, 10));
 
+    // Find the index of the todo item in the localTodos array
+    const index = localTodos.findIndex(todo => todo.id === parseInt(todoId, 10));
+
+    // If the todo item is not found, return a 404 error
     if (index === -1) {
       return NextResponse.json({ error: 'Todo not found' }, { status: 404 });
     }
 
+    // Update the todo item with the new data
     localTodos[index] = { ...localTodos[index], ...data };
+
+    // Return the updated todo item in the response
     return NextResponse.json({ todo: localTodos[index] }, { status: 200 });
   } catch (error) {
-    console.error("Error in PATCH:", error);
+    // Handle any errors that occur during the update process
+    console.error("Error in PUT:", error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
 
 // // Handle DELETE request to remove a todo item
 // export async function DELETE(req) {

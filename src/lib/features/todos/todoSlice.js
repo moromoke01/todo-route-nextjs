@@ -14,33 +14,27 @@ export const fetchTodo = createAsyncThunk('todos/fetchTodo', async (id) => {
 
 export const createTodo = createAsyncThunk('todos/createTodo', async (newTodo) => {
   const response = await axiosInstance.post('/todos', newTodo);
+  return response.data; 
+});
+
+
+
+export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, updatedTodo }) => {
+  const response = await axiosInstance.put(`/todos/${id}`, updatedTodo);
   return response.data;
 });
 
 
+// export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id , updatedTodo}) => {
+//   const response = await fetch(`/todos/${id}`, {
+//     method: 'PUT',
+//   })
 
-// export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, updatedTodo }) => {
-//   const response = await axiosInstance.put(/todos/${id}, updatedTodo);
+//   if (!response.ok) {
+//     throw new Error('Failed to update the todo');
+//   }
 //   return response.data;
 // });
-
-
-export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, updatedTodo }) => {
-  try {
-    const response = await fetch(`/todos/${id}`, {
-      method: 'PUT'
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to update the todo');
-    }
-
-    return response.data; 
-  } catch (error) {
-    console.error('Error in updateTodo:', error);
-    throw error;
-  }
-});
 
 
 export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id) => {
@@ -52,12 +46,12 @@ export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id) => {
     throw new Error('Failed to delete the todo');
   }
   
-  return id; // Return the id for Redux to remove the todo from state
+  return id; 
 });
 
 
 // export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id) => {
-//   await axiosInstance.delete(/todos/${id});
+//   await axiosInstance.delete(`/todos/${id}`);
 //   return id;
 // });
 

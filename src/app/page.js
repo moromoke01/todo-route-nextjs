@@ -11,7 +11,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const { todos, status, error } = useSelector(getTodoData);
 
-  const [formData, setFormData] = useState({ id: null, title: '', description: '' });
+  const [formData, setFormData] = useState({ title: '', description: '' });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,47 +22,38 @@ export default function Home() {
     dispatch(fetchTodos());
   }, [dispatch]);
 
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting form with data:", formData);
-
-    try {
-      if (formData.id !== null) {
-        console.log("Updating Todo ID:", formData.id); // Log the ID of the todo being updated
-        await dispatch(updateTodo({
-          id: formData.id,
-          updatedTodo: {
-            title: formData.title,
-            description: formData.description,
-          },
-        })).unwrap();
-      } else {
-        const newTodo = await dispatch(createTodo({
+  
+    if (formData.id) {
+      console.log("Updating Todo ID:", formData.id); // Check if ID is logged correctly
+      dispatch(updateTodo({
+        id: formData.id,
+        updatedTodo: {
           title: formData.title,
           description: formData.description,
-        })).unwrap();
-        console.log("New Todo Created with ID:", newTodo.id); // Log the ID of the newly created todo
-      }
-      setFormData({ id: null, title: '', description: '' });
-    } catch (err) {
-      console.error('Error handling submit:', err);
+        },
+      }));
+    } else {
+      const newTodo = await dispatch(createTodo({
+        title: formData.title,
+        description: formData.description,
+      }));
+      console.log("New Todo Created with ID:", newTodo.payload.id);
     }
+  
+    setFormData({ title: '', description: '' });
   };
+  
 
   const handleEdit = (todo) => {
-    setFormData({
-      id: todo.id,
-      title: todo.title,
-      description: todo.description,
-    });
+    setFormData(todo);
   };
 
   const handleDelete = async (id) => {
-    try {
-      await dispatch(deleteTodo(id)).unwrap();
-    } catch (err) {
-      console.error('Error handling delete:', err);
-    }
+    dispatch(deleteTodo(id));
   };
 
   return (
@@ -107,15 +98,17 @@ export default function Home() {
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleEdit(todo)}
-                    className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                    className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  >
                     <FaEdit />
                   </button>
                   <button
                     onClick={() => handleDelete(todo.id)}
-                    className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600" >
+                    className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                  >
                     <RiDeleteBin6Fill />
                   </button>
-                  <Link href={`todos/${todo.id}`}>
+                  <Link href={`/todos/${todo.id}`}>
                     <button
                       className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
                     >
