@@ -1,29 +1,14 @@
-import { todos } from '@/app/data/todos';
+// import { todos } from '@/app/data/todos';
 import { NextResponse } from 'next/server';
-
-let localTodos = [...todos];
+import { todos as localTodos } from '@/app/data/todos';
+// let localTodos = [...todos];
 
 // Handle GET request for all todo items
-export async function GET(req) {
+export async function GET() {
   return NextResponse.json(localTodos, { status: 200 });
 }
 
-// Handle GET request for a single todo item
-// export async function GET(req) {
-//   try {
-//     const url = new URL(req.url);
-//     const todoId = url.pathname.split('/').pop();
-//     const todo = localTodos.find(u => u.id === parseInt(todoId, 10));
 
-//     if (!todo) {
-//       return NextResponse.json({ error: 'Todo not found' }, { status: 404 });
-//     }
-//     return NextResponse.json(localTodos, { status: 200 });
-//   } catch (error) {
-//     console.error("Error in GET:", error);
-//     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-//   }
-// }
 
 // Handle POST request to create a new todo item
 export async function POST(req) {
@@ -41,57 +26,41 @@ export async function POST(req) {
   }
 }
 
-// Handle PATCH request to update an existing todo item
+
+
 // export async function PUT(req) {
 //   try {
 //     const data = await req.json();
+
 //     const url = new URL(req.url);
 //     const todoId = url.pathname.split('/').pop();
-//     const index = localTodos.findIndex(u => u.id === parseInt(todoId, 10));
+
+//     // Ensure that the todoId is correctly extracted
+//     if (!todoId) {
+//       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+//     }
+
+//     const index = localTodos.findIndex(todo => todo.id === parseInt(todoId, 10));
 
 //     if (index === -1) {
 //       return NextResponse.json({ error: 'Todo not found' }, { status: 404 });
 //     }
 
+//     // Update the todo item in localTodos
 //     localTodos[index] = { ...localTodos[index], ...data };
-//     return NextResponse.json({ todo: localTodos[index] }, { status: 200 });
+
+//     return NextResponse.json(localTodos[index], { status: 200 });
 //   } catch (error) {
-//     console.error("Error in PATCH:", error);
-//     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+//     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
 //   }
 // }
 
-export async function PUT(req) {
-  try {
-    // Parse the incoming JSON body
-    const data = await req.json();
-
-    // Extract the todo ID from the request URL
-    const url = new URL(req.url);
-    const todoId = url.pathname.split('/').pop();
-
-    // Find the index of the todo item in the localTodos array
-    const index = localTodos.findIndex(todo => todo.id === parseInt(todoId, 10));
-
-    // If the todo item is not found, return a 404 error
-    if (index === -1) {
-      return NextResponse.json({ error: 'Todo not found' }, { status: 404 });
-    }
-
-    // Update the todo item with the new data
-    localTodos[index] = { ...localTodos[index], ...data };
-
-    // Return the updated todo item in the response
-    return NextResponse.json({ todo: localTodos[index] }, { status: 200 });
-  } catch (error) {
-    // Handle any errors that occur during the update process
-    console.error("Error in PUT:", error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
 
 
-// // Handle DELETE request to remove a todo item
+
+
+
+// Handle DELETE request to remove a todo item
 // export async function DELETE(req) {
 //   try {
 //     const url = new URL(req.url);

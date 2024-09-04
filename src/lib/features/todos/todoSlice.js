@@ -2,30 +2,30 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '@/lib/axiosInstance';
 
 // Async actions
-export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
+export const fetchTodos = createAsyncThunk('todo/fetchTodos', async () => {
   const response = await axiosInstance.get('/todos');
   return response.data;
 });
 
-export const fetchTodo = createAsyncThunk('todos/fetchTodo', async (id) => {
+export const fetchTodo = createAsyncThunk('todo/fetchTodo', async (id) => {
   const response = await axiosInstance.get(`/todos/${id}`);
   return response.data;
 });
 
-export const createTodo = createAsyncThunk('todos/createTodo', async (newTodo) => {
+export const createTodo = createAsyncThunk('todo/createTodo', async (newTodo) => {
   const response = await axiosInstance.post('/todos', newTodo);
   return response.data; 
 });
 
 
 
-export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, updatedTodo }) => {
+export const updateTodo = createAsyncThunk('todo/updateTodo', async ({ id, updatedTodo }) => {
   const response = await axiosInstance.put(`/todos/${id}`, updatedTodo);
   return response.data;
 });
 
 
-// export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id , updatedTodo}) => {
+// export const updateTodo = createAsyncThunk('todo/updateTodo', async ({ id , updatedTodo}) => {
 //   const response = await fetch(`/todos/${id}`, {
 //     method: 'PUT',
 //   })
@@ -37,7 +37,7 @@ export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, upda
 // });
 
 
-export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id) => {
+export const deleteTodo = createAsyncThunk('todo/deleteTodo', async (id) => {
   const response = await fetch(`/todos/${id}`, {
     method: 'DELETE',
   });

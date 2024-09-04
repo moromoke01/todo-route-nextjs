@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect, useState } from "react";
 import './globals.css';
 import { useDispatch, useSelector } from "react-redux";
@@ -6,10 +7,13 @@ import { getTodoData, fetchTodos, createTodo, updateTodo, deleteTodo } from "@/l
 import Link from 'next/link';
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import { usePathname } from "next/navigation";
 
 export default function Home() {
   const dispatch = useDispatch();
   const { todos, status, error } = useSelector(getTodoData);
+  const pathname = usePathname();
+  const todoId = pathname.split('/').pop();
 
   const [formData, setFormData] = useState({ title: '', description: '' });
 
@@ -19,16 +23,19 @@ export default function Home() {
   };
 
   useEffect(() => {
-    dispatch(fetchTodos());
-  }, [dispatch]);
+    // Fetch all todos if no todoId is provided
+    if (todoId) {
+      dispatch(fetchTodos(todoId));
+    } else {
+      dispatch(fetchTodos());
+    }
+  }, [todoId, dispatch]);
 
-  
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (formData.id) {
-      console.log("Updating Todo ID:", formData.id); // Check if ID is logged correctly
+      console.log("Updating Todo ID:", formData.id);
       dispatch(updateTodo({
         id: formData.id,
         updatedTodo: {
@@ -42,11 +49,14 @@ export default function Home() {
         description: formData.description,
       }));
       console.log("New Todo Created with ID:", newTodo.payload.id);
+      if (newTodo.payload?.id) {
+        setFormData({ ...formData, id: newTodo.payload.id });
+      }
     }
-  
+
+    // Reset the form data after submission
     setFormData({ title: '', description: '' });
   };
-  
 
   const handleEdit = (todo) => {
     setFormData(todo);
